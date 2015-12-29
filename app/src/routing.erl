@@ -1,8 +1,8 @@
 -module(routing).
--export([splitter/0]).
+-export([get_routes/0]).
  
 
-splitter() ->
+get_routes() ->
     JSON = <<"{\"GET /method\": \"mycontroller.action mycontroller.action2\"}">>,
 %%    Routes = jsx:decode(JSON, [return_maps]),
     Routes = jsx:decode(JSON),
