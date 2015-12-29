@@ -19,5 +19,5 @@ create_cowboy_route({Path, ActionPath}) ->
     
     Methods = lists:map(fun atomize/1, Actions),
     BigFunc = fn:multicompose(Methods),
-    {EndPoint, http_glue, [Method, BigFunc]}.
+    {EndPoint, http_glue, [binary_to_list(Method), binary_to_list(BigFunc)]}.
     
