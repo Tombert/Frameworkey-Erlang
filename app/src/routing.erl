@@ -15,7 +15,9 @@ get_routes() ->
 
 atomize(ModuleAction) ->
     [Module, Action] = binary:token(ModuleAction),
-    fun Module:Action/1.
+    ModAtom = list_to_atom(Module),
+    ActAtom = list_to_atom(Action),
+    fun ModAtom:ModAtom/1.
 
 create_cowboy_route({Path, ActionPath}) ->
     [Method, EndPoint] = binary:token(Path, " "),
