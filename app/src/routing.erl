@@ -3,7 +3,7 @@
  
 
 get_routes() ->
-    JSON = <<"{\"GET /method\": \"mycontroller.action mycontroller.action2\"}">>,
+    JSON = <<"{\"GET /method\": \"mycontroller.action mycontroller.action2\", \"POST /method2\": \"mycontroller.action mycontroller.action2\"}">>,
     Routes = jsx:decode(JSON),
     lists:map(fun create_cowboy_route/1, Routes).
 
@@ -19,5 +19,5 @@ create_cowboy_route({Path, ActionPath}) ->
     
     Methods = lists:map(fun atomize/1, Actions),
     BigFunc = fn:multicompose(Methods),
-    {EndPoint, http_glue, [binary_to_list(Method), BigFunc]}.
+    {EndPoint, http_glue, [Method, BigFunc]}.
     
