@@ -16,8 +16,9 @@
 %%====================================================================
 
 start(_StartType, _StartArgs) ->
+    Routes = routing:get_routes(),
     Dispatch = cowboy_router:compile([
-        {'_', [{"/", hello_handler, []}]}
+        {'_', Routes}
     ]),
     {ok, _} = cowboy:start_http(my_http_listener, 100, [{port, 8080}],
         [{env, [{dispatch, Dispatch}]}]
