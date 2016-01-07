@@ -7,7 +7,7 @@ get_routes() ->
     io:format("Hello ~p~n~n~n", [JSON]),
 %    JSON = <<"{\"GET /method\": \"mycontroller.action mycontroller.action2\", \"POST /method\": \"mycontroller.action mycontroller.action2\"}">>,
     Routes = jsx:decode(JSON),
-    FormatRoutes = lists:map(fun create_cowboy_route/1, Routes),
+    FormatRoutes = lists:map(fun separate_route_parts/1, Routes),
     RouteMap = squish_to_map(FormatRoutes, #{}),
     Keys = maps:keys(RouteMap),
     Blah = lists:map(fun(Key) -> convert_to_cowboy_route(Key, maps:get(Key, RouteMap)) end, Keys),
@@ -41,7 +41,7 @@ atomize(ModuleAction) ->
     ActAtom = binary_to_atom(Action, unicode),
     fun ModAtom:ActAtom/1.
 
-create_cowboy_route({Path, ActionPath}) ->
+separate_route_parts({Path, ActionPath}) ->
     [Method, EndPoint] = binary:split(Path, <<" ">>),
     Actions = binary:split(ActionPath, <<" ">>),
     
