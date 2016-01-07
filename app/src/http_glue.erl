@@ -2,17 +2,16 @@
 -export([init/2, handle/2, terminate/2]).
 
 
-init(Req, [Method, BigFunc]) ->
-    io:format("~p~n~n~n", [cowboy_req:path(Req)]),
-    
-    % This is an assertion; I want to make sure that the method matches
-    io:format("Method: ~p~n~n~n", [Method]),
+init(Req, [HandlerMap]) ->
+    Method = cowboy_req:method(Req),
+
+    BigFunc = maps:get(Method, HandlerMap),
     io:format("~p~n~n~n", [cowboy_req:method(Req)]),
     Method = cowboy_req:method(Req),
     Req2 = cowboy_req:reply(200,
         [{<<"content-type">>, <<"text/html">>}],
         <<"Hello Erlang!\n">>, Req),
-        {ok, Req2, [Method, BigFunc]}.
+        {ok, Req2, [HandlerMap]}.
 
 
 handle(Req, State) ->
