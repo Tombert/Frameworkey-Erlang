@@ -4,17 +4,11 @@
 
 get_routes() ->
     {ok, JSON} = file:read_file("routes.json"),
-    io:format("Hello ~p~n~n~n", [JSON]),
-%    JSON = <<"{\"GET /method\": \"mycontroller.action mycontroller.action2\", \"POST /method\": \"mycontroller.action mycontroller.action2\"}">>,
     Routes = jsx:decode(JSON),
     FormatRoutes = lists:map(fun separate_route_parts/1, Routes),
     RouteMap = squish_to_map(FormatRoutes, #{}),
     Keys = maps:keys(RouteMap),
-    Blah = lists:map(fun(Key) -> convert_to_cowboy_route(Key, maps:get(Key, RouteMap)) end, Keys),
-    io:format("Hello ~p~n~n~n", [Blah]),
-    Blah.
-
-    
+    lists:map(fun(Key) -> convert_to_cowboy_route(Key, maps:get(Key, RouteMap)) end, Keys).
 
 convert_to_cowboy_route(EndPoint, Map) -> {EndPoint, http_glue, [Map]}.
 
