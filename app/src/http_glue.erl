@@ -4,9 +4,13 @@
 
 init(Req, [HandlerMap]) ->
     Method = cowboy_req:method(Req),
-    
+%    {ok, Blah, Req2} = cowboy_req:body_qs(Req),
+    %{ok, Blah, Req2} = cowboy_req:body_qs(Req),
+    bodyparser:parse_body(Req),
+%    io:format("Fart ~n~n~n~p~n~n~n", [Blah]),
+
     BigFunc = maps:get(Method, HandlerMap),
-    io:format("~p~n~n~n", [cowboy_req:method(Req)]),
+
     Method = cowboy_req:method(Req),
     Req2 = cowboy_req:reply(200,
         [{<<"content-type">>, <<"text/html">>}],
