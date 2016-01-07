@@ -4,7 +4,7 @@
 
 init(Req, [HandlerMap]) ->
     Method = cowboy_req:method(Req),
-
+    
     BigFunc = maps:get(Method, HandlerMap),
     io:format("~p~n~n~n", [cowboy_req:method(Req)]),
     Method = cowboy_req:method(Req),
