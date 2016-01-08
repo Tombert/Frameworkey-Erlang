@@ -5,13 +5,10 @@
 get_routes(PreVars) ->
     {ok, JSON} = file:read_file("routes.json"),
     Routes = jsx:decode(JSON),
-    FormatRoutes = lists:map(fun separate_route_parts/1, Routes),
+    FormatRoutes = lists:map(fun(Route) -> separate_route_parts(Route, PreVars) end, Routes),
     RouteMap = squish_to_map(FormatRoutes, #{}),
     Keys = maps:keys(RouteMap),
-    TempFun = fun(Params) ->
-                  maps:merge(Params, PreVars)
-              end,
-    [ TempFun | lists:map(fun(Key) -> convert_to_cowboy_route(Key, maps:get(Key, RouteMap)) end, Keys)].
+    lists:map(fun(Key) -> convert_to_cowboy_route(Key, maps:get(Key, RouteMap)) end, Keys).
 
 convert_to_cowboy_route(EndPoint, Map) -> {EndPoint, http_glue, [Map]}.
 
@@ -38,11 +35,14 @@ atomize(ModuleAction) ->
     ActAtom = binary_to_atom(Action, unicode),
     fun ModAtom:ActAtom/1.
 
-separate_route_parts({Path, ActionPath}) ->
+separate_route_parts({Path, ActionPath}, PreVars) ->
     [Method, EndPoint] = binary:split(Path, <<" ">>),
     Actions = binary:split(ActionPath, <<" ">>),
     
     Methods = lists:map(fun atomize/1, Actions),
-    BigFunc = fn:multicompose(Methods),
+    TempFun = fun(Params) ->
+                  maps:merge(Params, PreVars)
+              end,
+    BigFunc = fn:multicompose([TempFun | Methods]),
     {EndPoint, Method, BigFunc}.
     
