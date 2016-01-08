@@ -1,4 +1,4 @@
 {
   "GET /method": "mycontroller.action mycontroller.action2",
-  "POST /method": "mycontroller.action mycontroller.action2"
+  "POST /method": "mycontroller.action mycontroller.action3"
 }
