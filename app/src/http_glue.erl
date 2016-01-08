@@ -5,19 +5,19 @@
 init(Req, [HandlerMap]) ->
     Method = cowboy_req:method(Req),
     
-%    {ok, Blah, Req2} = cowboy_req:body_qs(Req),
-    %{ok, Blah, Req2} = cowboy_req:body_qs(Req),
-    Blah = bodyparser:parse_body(Req),
-    io:format("Fart ~n~n~n~p~n~n~n", [Blah]),
+    Params = bodyparser:parse_body(Req),
 
     BigFunc = maps:get(Method, HandlerMap),
+    response(BigFunc(Params), Req),
+    {ok, Req, [HandlerMap]}.
 
-    Method = cowboy_req:method(Req),
+response({json, Data}, Req) ->
     Req2 = cowboy_req:reply(200,
-        [{<<"content-type">>, <<"text/html">>}],
-        <<"Hello Erlang!\n">>, Req),
-        {ok, Req2, [HandlerMap]}.
+        [{<<"content-type">>, <<"application/json">>}],
+        jsx:encode(Data), Req).
 
+
+    
 
 handle(Req, State) ->
     {ok, Reply} = cowboy_http_req:reply(200, [], <<"Hello World!">>, Req),
