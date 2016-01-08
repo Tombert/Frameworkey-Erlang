@@ -1,14 +1,17 @@
 -module(routing).
--export([get_routes/0]).
+-export([get_routes/1]).
  
 
-get_routes() ->
+get_routes(PreVars) ->
     {ok, JSON} = file:read_file("routes.json"),
     Routes = jsx:decode(JSON),
     FormatRoutes = lists:map(fun separate_route_parts/1, Routes),
     RouteMap = squish_to_map(FormatRoutes, #{}),
     Keys = maps:keys(RouteMap),
-    lists:map(fun(Key) -> convert_to_cowboy_route(Key, maps:get(Key, RouteMap)) end, Keys).
+    TempFun = fun(Params) ->
+                  maps:merge(Params, PreVars)
+              end,
+    [ TempFun | lists:map(fun(Key) -> convert_to_cowboy_route(Key, maps:get(Key, RouteMap)) end, Keys)].
 
 convert_to_cowboy_route(EndPoint, Map) -> {EndPoint, http_glue, [Map]}.
 
