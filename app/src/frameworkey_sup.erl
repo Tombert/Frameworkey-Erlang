@@ -3,7 +3,7 @@
 %% @end
 %%%-------------------------------------------------------------------
 
--module('mylib_sup').
+-module(frameworkey_sup).
 
 -behaviour(supervisor).
 

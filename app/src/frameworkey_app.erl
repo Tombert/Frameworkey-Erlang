@@ -3,7 +3,7 @@
 %% @end
 %%%-------------------------------------------------------------------
 
--module('mylib_app').
+-module(frameworkey_app).
 
 -behaviour(application).
 
@@ -24,7 +24,7 @@ start(_StartType, _StartArgs) ->
     {ok, _} = cowboy:start_http(my_http_listener, 100, [{port, 8080}],
         [{env, [{dispatch, Dispatch}]}]
     ),
-    'mylib_sup':start_link().
+    'frameworkey_sup':start_link().
 
 %%--------------------------------------------------------------------
 stop(_State) ->
