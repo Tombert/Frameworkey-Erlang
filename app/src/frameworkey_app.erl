@@ -17,6 +17,7 @@
 
 start(_StartType, _StartArgs) ->
     PreVars = before:init(),
+    ok = config:make_config(),
     Routes = routing:get_routes(PreVars),
     Dispatch = cowboy_router:compile([
         {'_', Routes}
