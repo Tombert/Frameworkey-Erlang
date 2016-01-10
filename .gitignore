@@ -10,6 +10,7 @@ _*
 ebin
 log
 erl_crash.dump
+rebar.lock
 .rebar
 _rel
 _deps
