@@ -4,9 +4,9 @@
 action(Params) ->
     Params.
 action2(Blah) ->
-    #{ json => Blah, header => [{<<"content-type">>,<<"application/json">>}]}.
+    #{ json => Blah, header => #{code => 201, data =>[{<<"content-type">>,<<"application/json">>}]}}.
 
 action3(Blah3) ->
     Yo = maps:put(howdy, <<"fart">>, Blah3),
-    #{ json => Yo}.
+    #{ json => Yo, header => #{code => 201, data =>[{<<"content-type">>,<<"application/json">>}]}}.
 

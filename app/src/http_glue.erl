@@ -20,9 +20,18 @@ maybe_get_function(true, Map, Method) ->
 
 
 response(#{header := Header, json := Data}, Req) ->
-    Req2 = cowboy_req:reply(200, Header, jsx:encode(Data), Req);
+    #{ code := Code, data := RealHeader }= make_real_header(Header),
+    Req2 = cowboy_req:reply(Code, RealHeader, jsx:encode(Data), Req);
 response(#{json := Data}, Req) ->
-    response(#{json => Data, header => [{<<"content-type">>, <<"application/json">>}]}, Req).
+    response(#{json => Data, header => #{ code => 200, data => [{<<"content-type">>, <<"application/json">>}]}}, Req).
+
+
+make_real_header(#{code := Code, data := Data}) ->
+    #{code => Code, data => Data};
+make_real_header(#{data := Data}) ->
+    #{code => 200, data => Data};
+make_real_header(Headers) when is_list(Headers) ->
+    #{code => 200, data => Headers}.
 
 handle(Req, State) ->
     {ok, Reply} = cowboy_http_req:reply(200, [], <<"Hello World!">>, Req),
