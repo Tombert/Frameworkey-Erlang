@@ -1,5 +1,5 @@
 # Frameworkey-Erlang
-A web framework that (theretically) allows you to have Unix-style pipes for controller actions.
+A web framework that (theoretically) allows you to have Unix-style pipes for controller actions.
 
 ## Why?
 
