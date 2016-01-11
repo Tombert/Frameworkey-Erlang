@@ -34,3 +34,7 @@ action2(Blah) ->
 ```
 
 These functions can be chained ad-nauseum.  If you wanted to have fifty actions handle an action, be my guest.  Just make sure that the last action returns a map with the key `json`. 
+
+## What tech is powering this? 
+
+Besides my amazingly clever ingenuity, Frameworkey is powered by the amazingly wonderful [Cowboy](http://ninenines.eu/docs/en/cowboy/HEAD/guide/) server.  I use Sync so that I don't have to constantly reload stuff.  It's not hard. 
