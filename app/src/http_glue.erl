@@ -6,7 +6,9 @@ init(Req, [HandlerMap]) ->
     Method = cowboy_req:method(Req),
     Params = bodyparser:parse_body(Req),
     BigFunc = maybe_get_function(maps:is_key(Method, HandlerMap), HandlerMap, Method),
-    response(BigFunc(Params), Req),
+    Value = BigFunc(Params),
+    io:format("~n~n~n~p~n~n~n~n", [Value]),
+    response(Value, Req),
     {ok, Req, [HandlerMap]}.
 
 maybe_get_function(false, _, _) ->
@@ -17,11 +19,10 @@ maybe_get_function(true, Map, Method) ->
     maps:get(Method, Map).
 
 
-response({json, Data}, Req) ->
-    Req2 = cowboy_req:reply(200,
-        [{<<"content-type">>, <<"application/json">>}],
-        jsx:encode(Data), Req).
-
+response(#{header := Header, json := Data}, Req) ->
+    Req2 = cowboy_req:reply(200, Header, jsx:encode(Data), Req);
+response(#{json := Data}, Req) ->
+    response(#{json => Data, header => [{<<"content-type">>, <<"application/json">>}]}, Req).
 
 handle(Req, State) ->
     {ok, Reply} = cowboy_http_req:reply(200, [], <<"Hello World!">>, Req),
