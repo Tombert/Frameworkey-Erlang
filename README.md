@@ -1,5 +1,5 @@
 # Frameworkey-Erlang
-A web framework that (theretically) allows you to have Unix-style pipes for controller actions.
+A web framework that (theoretically) allows you to have Unix-style pipes for controller actions.
 
 ## Why?
 
@@ -38,3 +38,7 @@ These functions can be chained ad-nauseum.  If you wanted to have fifty actions 
 ## What tech is powering this? 
 
 Besides my amazingly clever ingenuity, Frameworkey is powered by the amazingly wonderful [Cowboy](http://ninenines.eu/docs/en/cowboy/HEAD/guide/) server.  I use Sync so that I don't have to constantly reload stuff.  It's not hard. 
+
+## What version of Erlang does this support?
+
+I'm not sure, but I make pretty liberal use of maps, so at least Erlang 17.  I develop using Erlang 18.   
