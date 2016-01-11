@@ -8,5 +8,5 @@ action2(Blah) ->
 
 action3(Blah3) ->
     Yo = maps:put(howdy, <<"fart">>, Blah3),
-    #{ json => Yo, header => #{code => 302, data =>[{<<"Location">>,<<"http://yahoo.com">>}]}}.
+    #{ json => Yo}.
 

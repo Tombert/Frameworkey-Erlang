@@ -1,6 +1,13 @@
 -module(routing).
--export([get_routes/1]).
+-export([get_routes/1, update_routes/0]).
  
+update_routes() ->
+    Prevars = config:fetch(prevars),
+    Routes = get_routes(Prevars),
+    Dispatch = cowboy_router:compile([
+        {'_', Routes}
+    ]),
+    cowboy:set_env(my_http_listener, dispatch, Dispatch).
 
 get_routes(PreVars) ->
     {ok, JSON} = file:read_file("routes.json"),
