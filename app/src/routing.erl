@@ -37,14 +37,14 @@ squish_to_map([{EndPoint, Method, BigFunc} | Routes], Map) ->
 
 
 atomize(ModuleAction) ->
-    [Module, Action] = binary:split(ModuleAction, <<".">>),
+    [Module, Action] = binary:split(ModuleAction, <<".">>, [global]),
     ModAtom = binary_to_atom(Module, unicode),
     ActAtom = binary_to_atom(Action, unicode),
     fun ModAtom:ActAtom/1.
 
 separate_route_parts({Path, ActionPath}, PreVars) ->
     [Method, EndPoint] = binary:split(Path, <<" ">>),
-    Actions = binary:split(ActionPath, <<" ">>),
+    Actions = binary:split(ActionPath, <<" ">>, [global]),
     
     Methods = lists:map(fun atomize/1, Actions),
     TempFun = fun(Params) ->

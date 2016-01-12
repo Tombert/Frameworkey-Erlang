@@ -1,4 +1,3 @@
 {
-  "GET /method1": "mycontroller.action mycontroller.action2",
-  "POST /method6": "mycontroller.action mycontroller.action3"
+  "POST /link": "shortener.generate_key shortener.write_to_db shortener.format"
 }
