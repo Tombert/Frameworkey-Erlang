@@ -6,9 +6,7 @@ parse_body(Req) ->
     BodyMap = get_body_map(ContentType, Req),
     QueryParamMap = maps:from_list(cowboy_req:parse_qs(Req)),
     Bindings = get_route_params(Req),
-    Vals = maps:merge(maps:merge(QueryParamMap, Bindings), BodyMap),
-    io:format("~n~n~nVals ~p~n~n~n", [Vals]),
-    Vals.
+    maps:merge(maps:merge(QueryParamMap, Bindings), BodyMap).
 
 get_route_params(Req) ->
     Bindings = cowboy_req:bindings(Req),
