@@ -5,9 +5,16 @@ parse_body(Req) ->
     ContentType = cowboy_req:parse_header(<<"content-type">>, Req),
     BodyMap = get_body_map(ContentType, Req),
     QueryParamMap = maps:from_list(cowboy_req:parse_qs(Req)),
-    maps:merge(QueryParamMap, BodyMap).
+    Bindings = get_route_params(Req),
+    Vals = maps:merge(maps:merge(QueryParamMap, Bindings), BodyMap),
+    io:format("~n~n~nVals ~p~n~n~n", [Vals]),
+    Vals.
 
-    
+get_route_params(Req) ->
+    Bindings = cowboy_req:bindings(Req),
+    RealParams = lists:map(fun({Key, Value}) ->  {list_to_binary(atom_to_list(Key)), Value} end, Bindings),
+    maps:from_list(RealParams).
+
 get_body_map({<<"application">>,<<"json">>,_}, Req) ->
     {ok, Body, _} = cowboy_req:body(Req),
     jsx:decode(Body, [return_maps]);
