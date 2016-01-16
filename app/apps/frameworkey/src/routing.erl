@@ -10,7 +10,7 @@ update_routes() ->
     cowboy:set_env(my_http_listener, dispatch, Dispatch).
 
 get_routes(PreVars) ->
-    {ok, JSON} = file:read_file("routes.json"),
+    {ok, JSON} = file:read_file(code:priv_dir(frameworkey) ++ "/routes.json"),
     Routes = jsx:decode(JSON),
     FormatRoutes = lists:map(fun(Route) -> separate_route_parts(Route, PreVars) end, Routes),
     RouteMap = squish_to_map(FormatRoutes, #{}),

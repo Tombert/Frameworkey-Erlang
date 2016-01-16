@@ -3,7 +3,7 @@
 
 make_config() ->
     ets:new(config_table, [named_table, protected,set, {keypos, 1}]),
-    {ok, JSON} = file:read_file("config.json"),
+    {ok, JSON} = file:read_file(code:priv_dir(frameworkey) ++ "/config.json"),
     ConfigMap = jsx:decode(JSON, [return_maps]),
     create_download_dir(ConfigMap).
 

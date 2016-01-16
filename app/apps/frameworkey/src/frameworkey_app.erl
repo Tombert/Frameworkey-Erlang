@@ -16,6 +16,7 @@
 %%====================================================================
 
 start(_StartType, _StartArgs) ->
+    io:format("~n~n~n~n~n~nRoutes:~p~n~n~n",["hello"]),
     PreVars = before:init(),
     ok = config:make_config(),
     ets:insert(config_table, {prevars, PreVars}),
