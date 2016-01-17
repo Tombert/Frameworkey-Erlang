@@ -16,15 +16,15 @@
 %%====================================================================
 
 start(_StartType, _StartArgs) ->
-    io:format("~n~n~n~n~n~nRoutes:~p~n~n~n",["hello"]),
     PreVars = before:init(),
     ok = config:make_config(),
     ets:insert(config_table, {prevars, PreVars}),
     Routes = routing:get_routes(PreVars),
+    Port = config:fetch(port),
     Dispatch = cowboy_router:compile([
         {'_', Routes}
     ]),
-    {ok, _} = cowboy:start_http(my_http_listener, 100, [{port, 8080}],
+    {ok, _} = cowboy:start_http(my_http_listener, 100, [{port, Port}],
         [{env, [{dispatch, Dispatch}]}]
     ),
     'frameworkey_sup':start_link().
