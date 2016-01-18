@@ -1,5 +1,5 @@
 # Frameworkey-Erlang
-A web framework that (theoretically) allows you to have Unix-style pipes for controller actions.
+A web framework that allows you Unix-style piping of controller actions. What you feel in your pants is a okay. That is what we call a nerd boner.
 
 ## Why?
 
