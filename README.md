@@ -7,7 +7,7 @@ Why not?
 
 ## No really, why?
 
-Because when doing web-development with a lot of platforms, there tends to be a ton of nesting-of-functions, and consequently, a ton of "copy-paste, and change one line" for different endpoints.  What I want is to allow small, reusable, composable functions that can be arbitrarily glued together.
+Because when doing web-development with a lot of endpoints, there tends to be a ton of nesting-of-functions, and consequently, a ton of "copy-paste, and change one line" for different endpoints.  What I want is to allow small, reusable, composable functions that can be arbitrarily glued together.
 
 ## How does it work?
 
