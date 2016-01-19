@@ -1,10 +1,12 @@
 -module(policies).
 -export([get_policies/0]).
 
-%% check(Params) ->
-%%   [{_, Policies}] = ets:lookup(policy_table, policies),
-  
-%%   runPolicies(Params,  )  
+check(Params, Controller, Action) ->
+    [{_, Policies}] = ets:lookup(policy_table, policies),
+    MyActions = maps:get(Action, maps:get(Controller, Policies), maps:get(<<"*">>, maps:get(Controller, Policies))),
+
+    run_policies(Params,  MyActions, true).
+    
 
 get_policies() ->
     ets:new(policy_table, [named_table, protected,set, {keypos, 1}]),
@@ -25,10 +27,10 @@ atomize_actions({Action, Policies}) ->
     PolicyAtoms = lists:map(fun(I) -> binary_to_atom(I, unicode) end, Policies),
     {Act, PolicyAtoms}.
 
-runPolicies(Params, [Policy | Policies], true) ->
+run_policies(Params, [Policy | Policies], true) ->
     Result = Policy:check(Params),
-    runPolicies(Params, Policies, Result);
-runPolicies(_, [], true) ->
+    run_policies(Params, Policies, Result);
+run_policies(_, [], true) ->
     true;
-runPolicies(_, _, false) ->
+run_policies(_, _, false) ->
     false.
