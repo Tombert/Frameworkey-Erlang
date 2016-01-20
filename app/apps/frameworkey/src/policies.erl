@@ -1,10 +1,9 @@
 -module(policies).
--export([get_policies/0]).
+-export([get_policies/0, check/3]).
 
 check(Params, Controller, Action) ->
     [{_, Policies}] = ets:lookup(policy_table, policies),
     MyActions = maps:get(Action, maps:get(Controller, Policies), maps:get(<<"*">>, maps:get(Controller, Policies))),
-
     run_policies(Params,  MyActions, true).
     
 

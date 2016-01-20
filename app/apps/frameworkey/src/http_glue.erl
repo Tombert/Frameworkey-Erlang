@@ -7,7 +7,6 @@ init(Req, [HandlerMap]) ->
     Params = bodyparser:parse_body(Req),
     BigFunc = maps:get(Method, HandlerMap, fun(_) -> {json, #{error => <<"Not Found">>}} end),
     Value = BigFunc(Params),
-    io:format("~n~n~n~p~n~n~n~n", [Value]),
     response(Value, Req),
     {ok, Req, [HandlerMap]}.
 

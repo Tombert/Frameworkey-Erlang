@@ -29,7 +29,7 @@ merge_stuff(true, EndPoint, Method, BigFunc, Map) ->
 
 squish_to_map([], Map) ->
     Map;
-squish_to_map([{EndPoint, Method, BigFunc} | Routes], Map) ->
+squish_to_map([{EndPoint, Method, BigFunc, ModActAtoms} | Routes], Map) ->
     ListEndPoint = binary_to_list(EndPoint),
     IsInMap = maps:is_key(ListEndPoint, Map),
     NewMap = merge_stuff(IsInMap, ListEndPoint, Method, BigFunc, Map),
@@ -40,16 +40,17 @@ atomize(ModuleAction) ->
     [Module, Action] = binary:split(ModuleAction, <<".">>, [global]),
     ModAtom = binary_to_atom(Module, unicode),
     ActAtom = binary_to_atom(Action, unicode),
-    fun ModAtom:ActAtom/1.
+    {{ModAtom, ActAtom}, fun ModAtom:ActAtom/1}.
 
 separate_route_parts({Path, ActionPath}, PreVars) ->
     [Method, EndPoint] = binary:split(Path, <<" ">>),
     Actions = binary:split(ActionPath, <<" ">>, [global]),
     
-    Methods = lists:map(fun atomize/1, Actions),
+    Mthds = lists:map(fun atomize/1, Actions),
+    {ModActAtoms, Methods} = lists:unzip(Mthds),
     TempFun = fun(Params) ->
                   maps:merge(Params, PreVars)
               end,
     BigFunc = fn:multicompose([TempFun | Methods]),
-    {EndPoint, Method, BigFunc}.
+    {EndPoint, Method, BigFunc, ModActAtoms}.
     
