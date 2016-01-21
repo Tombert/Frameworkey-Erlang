@@ -3,17 +3,25 @@
 
 check(Params, Controller, Action) ->
     [{_, Policies}] = ets:lookup(policy_table, policies),
-    MyActions = maps:get(Action, maps:get(Controller, Policies), maps:get(<<"*">>, maps:get(Controller, Policies))),
+    ControllerPolicy = maps:get(Controller, Policies),
+    io:format("~n~n~n~n~n~n~n~nController:~p~n~n~n~n~n Action:~p~n~n~n~nControllerPolicy:~p~n~n~n", [Controller, Action, ControllerPolicy]),
+    MyActions = maybe_find_actions(lists:keyfind(Action, 1, ControllerPolicy), ControllerPolicy),
     run_policies(Params,  MyActions, true).
     
+maybe_find_actions(false, ControllerPolicy) ->
+    lists:keyfind('*', 1, ControllerPolicy);
+maybe_find_actions(A, _) ->
+    A.
 
 get_policies() ->
     ets:new(policy_table, [named_table, protected,set, {keypos, 1}]),
     {ok, JSON} = file:read_file(code:priv_dir(frameworkey) ++ "/policies.json"),
     Policies = jsx:decode(JSON),
     RealPolicies = lists:map(fun atomize_controllers/1, Policies),
-    Policies = maps:from_list(RealPolicies),
-    ets:insert(policy_table, {policies, Policies}).
+    io:format("~n~n~n~nPolicies:~p~n~n~n", [RealPolicies]),
+    PoliciesMap = maps:from_list(RealPolicies),
+    io:format("~n~n~n~nPoliciesMap:~p~n~n~n", [PoliciesMap]),
+    ets:insert(policy_table, {policies, PoliciesMap}).
 
 
 atomize_controllers({Controller, Actions}) ->    
