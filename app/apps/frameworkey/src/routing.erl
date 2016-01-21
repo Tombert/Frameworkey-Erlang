@@ -19,6 +19,7 @@ get_routes(PreVars) ->
 
 convert_to_cowboy_route(EndPoint, Map) -> {EndPoint, http_glue, [Map]}.
 
+% BigFunc is actually a tuple like {BigFunc, ActionAtoms}
 merge_stuff(false, EndPoint, Method, BigFunc, Map) ->
     maps:put(EndPoint, #{Method => BigFunc}, Map);
 merge_stuff(true, EndPoint, Method, BigFunc, Map) ->
@@ -32,7 +33,8 @@ squish_to_map([], Map) ->
 squish_to_map([{EndPoint, Method, BigFunc, ModActAtoms} | Routes], Map) ->
     ListEndPoint = binary_to_list(EndPoint),
     IsInMap = maps:is_key(ListEndPoint, Map),
-    NewMap = merge_stuff(IsInMap, ListEndPoint, Method, BigFunc, Map),
+    NewMap = merge_stuff(IsInMap, ListEndPoint, Method, {BigFunc, ModActAtoms}, Map),
+    io:format("~n~n~n~nBlah: ~p~n~n", [ModActAtoms]),
     squish_to_map(Routes, NewMap).
 
 
