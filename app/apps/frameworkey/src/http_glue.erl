@@ -5,11 +5,21 @@
 init(Req, [HandlerMap]) ->
     Method = cowboy_req:method(Req),
     Params = bodyparser:parse_body(Req),
-    BigFunc = maps:get(Method, HandlerMap, fun(_) -> {json, #{error => <<"Not Found">>}} end),
-    Value = BigFunc(Params),
-    io:format("~n~n~n~p~n~n~n~n", [Value]),
+    {BigFunc, ModActAtoms} = maps:get(Method, HandlerMap, {fun(_) -> {json, #{error => <<"Not Found">>}} end, []}),
+    Results = lists:map(fun({Controller, Action}) -> policies:check(Params, Controller, Action) end, ModActAtoms), 
+    IsNotAllowed = lists:member(false, Results),
+    RealFunc = authorizedFunc(IsNotAllowed, BigFunc),
+    Value = RealFunc(Params),
     response(Value, Req),
     {ok, Req, [HandlerMap]}.
+
+
+authorizedFunc(true, _) -> 
+    fun(_) ->
+            #{json => #{error => "Not Authorized"}, header => #{code => 403, data => []}}
+    end;
+authorizedFunc(false, BigFunc) -> 
+    BigFunc.
 
 
 response(#{header := Header, json := Data}, Req) ->

@@ -1,0 +1,6 @@
+{
+  "mycontroller": {
+    "action": ["auth"],
+    "*": ["auth"]
+  }
+}

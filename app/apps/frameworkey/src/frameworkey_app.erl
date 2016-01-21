@@ -19,6 +19,7 @@ start(_StartType, _StartArgs) ->
     PreVars = before:init(),
     ok = config:make_config(),
     ets:insert(config_table, {prevars, PreVars}),
+    policies:get_policies(),
     Routes = routing:get_routes(PreVars),
     Port = config:fetch(port),
     Dispatch = cowboy_router:compile([
