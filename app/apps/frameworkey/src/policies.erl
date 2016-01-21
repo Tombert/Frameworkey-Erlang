@@ -10,7 +10,7 @@ check(Params, Controller, Action) ->
     
 maybe_find_actions(false, ControllerPolicy) ->
     lists:keyfind('*', 1, ControllerPolicy);
-maybe_find_actions(A, _) ->
+maybe_find_actions({_, A}, _) ->
     A.
 
 get_policies() ->
@@ -34,10 +34,11 @@ atomize_actions({Action, Policies}) ->
     PolicyAtoms = lists:map(fun(I) -> binary_to_atom(I, unicode) end, Policies),
     {Act, PolicyAtoms}.
 
+
+run_policies(_, [], true) ->
+    true;
 run_policies(Params, [Policy | Policies], true) ->
     Result = Policy:check(Params),
     run_policies(Params, Policies, Result);
-run_policies(_, [], true) ->
-    true;
 run_policies(_, _, false) ->
     false.

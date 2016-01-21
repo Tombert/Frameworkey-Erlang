@@ -2,6 +2,6 @@
 -export([check/1]).
 
 
-check(_) -> false.
+check(_) -> true.
 
 
