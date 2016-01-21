@@ -9,7 +9,8 @@ check(Params, Controller, Action) ->
     run_policies(Params,  MyActions, true).
     
 maybe_find_actions(false, ControllerPolicy) ->
-    lists:keyfind('*', 1, ControllerPolicy);
+    {'*', A} = lists:keyfind('*', 1, ControllerPolicy),
+    A;
 maybe_find_actions({_, A}, _) ->
     A.
 

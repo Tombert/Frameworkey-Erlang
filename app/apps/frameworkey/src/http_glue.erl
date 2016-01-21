@@ -16,7 +16,7 @@ init(Req, [HandlerMap]) ->
 
 authorizedFunc(true, _) -> 
     fun(_) ->
-            #{json => #{error => "Not Authorized"}, header => #{code => 403, data => []}}
+            #{json => #{error => <<"Not Authorized">>}, header => #{code => 403, data => []}}
     end;
 authorizedFunc(false, BigFunc) -> 
     BigFunc.
