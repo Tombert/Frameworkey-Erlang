@@ -11,6 +11,7 @@ Because when doing web-development with a lot of endpoints, there tends to be a 
 
 ## How does it work?
 
+### Routing
 That's easy.  In the `routes.json`:
 
 ```
@@ -34,6 +35,48 @@ action2(Blah) ->
 ```
 
 These functions can be chained ad-nauseum.  If you wanted to have fifty actions handle an action, be my guest.  Just make sure that the last action returns a map with the key `json`. 
+
+
+### Permissions/ACL
+The specifics of the API are liable to change, but the documentation is as follows.
+
+Permissions are specified in the `priv/policies.json` file. Currently this is unchangable. The file should look like this:
+
+```
+{
+  "mycontroller":{
+    "action": ["auth", "admin"],
+    "*": "auth"
+  }
+}
+```
+You can specify as many policies for each action as you'd like, and are run in the order in which they appear in the array (you can omit the array if you only want to run one policy). If any policies return `false`, none of the actions for the endpoint will be run, and a `403` will be sent to the client.
+
+The `"*"` is the "fallback action".  If a policy is not defined for the particular action that's about to be run, it "falls back" to the `*` as a sort of default permission.
+
+#### Defining Policies
+A policy may look something like this:
+
+```
+-module(auth).
+-export([check/1]).
+
+check(Params) ->
+  Username = maps:get(<<"username">>, Params),
+  Password= maps:get(<<"password">>, Params),
+  Result = case db:lookupUser(Username, Password) of
+    {error, nouser} -> false;
+    {ok, User} -> true
+  end,
+  Result. 
+
+```
+
+You can probably make this look more elegant with cooler pattern matching and whatnot, but here's the criteria you need to know:
+- A policy needs to have a `check/1` function exported.
+- The argument that will be fed into `check/1` will be a map with all the params from the request.
+- You return `true` or `false` depending on whether or not you want to grant access. 
+
 
 ## What tech is powering this? 
 
