@@ -34,7 +34,6 @@ squish_to_map([{EndPoint, Method, BigFunc, ModActAtoms} | Routes], Map) ->
     ListEndPoint = binary_to_list(EndPoint),
     IsInMap = maps:is_key(ListEndPoint, Map),
     NewMap = merge_stuff(IsInMap, ListEndPoint, Method, {BigFunc, ModActAtoms}, Map),
-    io:format("~n~n~n~nBlah: ~p~n~n", [ModActAtoms]),
     squish_to_map(Routes, NewMap).
 
 
