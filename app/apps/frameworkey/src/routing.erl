@@ -1,6 +1,8 @@
 -module(routing).
 -export([get_routes/1, update_routes/0]).
- 
+
+% This function is simply here to hot-reload cowboy
+% routes easily.  
 update_routes() ->
     Prevars = config:fetch(prevars),
     Routes = get_routes(Prevars),
@@ -28,6 +30,7 @@ merge_stuff(true, EndPoint, Method, BigFunc, Map) ->
     maps:update(EndPoint, NewMethodMap, Map).
 
 
+% get all the the enpoints and make into a map. 
 squish_to_map([], Map) ->
     Map;
 squish_to_map([{EndPoint, Method, BigFunc, ModActAtoms} | Routes], Map) ->
@@ -37,6 +40,8 @@ squish_to_map([{EndPoint, Method, BigFunc, ModActAtoms} | Routes], Map) ->
     squish_to_map(Routes, NewMap).
 
 
+% split the routes by the ".", then convert to atoms 
+% and make into a callable function. 
 atomize(ModuleAction) ->
     [Module, Action] = binary:split(ModuleAction, <<".">>, [global]),
     ModAtom = binary_to_atom(Module, unicode),
